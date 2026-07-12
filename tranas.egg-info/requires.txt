@@ -1,0 +1,9 @@
+ase>=3.23.0
+
+[doc]
+sphinx
+sphinx-rtd-theme
+
+[test]
+pytest
+pytest-cov

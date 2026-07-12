@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tranas"
+version = "0.0.0"
+description = "TraNaS library"
+#readme = "README.md"
+requires-python = ">=3.10"
+license = 'LGPL-2.1-or-later'
+authors = [
+    {name = "DR", email = "dmitry.ryndyk@tu-dresden.de"},
+]
+dependencies = ["ase>=3.23.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tranas*"]
+exclude = ["build_cp2k*"]
+
+[project.urls]
+#Homepage = "https://github.com/cp2k/cp2k_ase_plugin"
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+doc = ["sphinx", "sphinx-rtd-theme"]
+
+#[project.entry-points."ase.plugins"]
+#cp2k = "cp2k_plugin._ase_plugin"
+

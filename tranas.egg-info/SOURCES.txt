@@ -1,0 +1,12 @@
+COPYING.LESSER
+LICENSE
+pyproject.toml
+tranas/__init__.py
+tranas/cp2k_input.py
+tranas/spm.py
+tranas.egg-info/PKG-INFO
+tranas.egg-info/SOURCES.txt
+tranas.egg-info/dependency_links.txt
+tranas.egg-info/requires.txt
+tranas.egg-info/top_level.txt
+tranas/cli/main.py

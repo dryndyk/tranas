@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: tranas
+Version: 0.0.0
+Summary: TraNaS library
+Author-email: DR <dmitry.ryndyk@tu-dresden.de>
+License-Expression: LGPL-2.1-or-later
+Requires-Python: >=3.10
+License-File: LICENSE
+License-File: COPYING.LESSER
+Requires-Dist: ase>=3.23.0
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"
+Requires-Dist: pytest-cov; extra == "test"
+Provides-Extra: doc
+Requires-Dist: sphinx; extra == "doc"
+Requires-Dist: sphinx-rtd-theme; extra == "doc"
+Dynamic: license-file

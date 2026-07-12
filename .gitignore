@@ -33,3 +33,5 @@ ase/gui/po/ag.pot
 coverage-html
 
 .mypy_cache
+
+venv/*

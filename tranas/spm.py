@@ -42,4 +42,4 @@ class SPM:
 
         # Start CP2K calculation. 
         from subprocess import check_call
-        check_call(['mpirun', '-n', '8', 'cp2k', inp_fname])
+        check_call(['/home/tranas/cp2k/install_psmp/bin/launch','mpirun', '-n', '8', 'cp2k', inp_fname])
