@@ -41,5 +41,8 @@ class SPM:
         write(precalc.label+'.xyz', atoms)
 
         # Start CP2K calculation. 
-        from subprocess import check_call
-        check_call(['/home/tranas/cp2k/install_psmp/bin/launch','mpirun', '-n', '8', 'cp2k', inp_fname])
+        from subprocess import call, run
+        #run(['/home/tranas/cp2k/install_psmp/bin/launch','mpirun', '-n', '8', 'cp2k', inp_fname])
+        #run("/home/tranas/cp2k/install_psmp/bin/launch mpirun -n 8 cp2k "+inp_fname, shell=True)
+        run("/home/tranas/cp2k/install_psmp/bin/launch mpirun -n 8 cp2k "+inp_fname, shell=True)
+
