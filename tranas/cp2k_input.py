@@ -6,8 +6,8 @@ Based on ASE-Calculator for CP2K
 Author: Ole Schuett <ole.schuett@mat.ethz.ch>
 """
 
+from warnings import warn
 from ase.units import Rydberg
-
 from ase.calculators.cp2k import CP2K, InputSection, parse_input
 
 
@@ -108,6 +108,8 @@ class CP2Kinput(CP2K):
         Name of exchange and correlation functional.
         Accepts all functions supported by CP2K itself or libxc.
         Default is ``LDA``.
+    xtb: str
+         Name of the xTB method. Currently, the supported values are 'GFN1' and 'GFN2'(default).
     print_level: str
         PRINT_LEVEL of global output.
         Possible options are:
@@ -134,6 +136,7 @@ class CP2Kinput(CP2K):
         charge=None,
         multiplicity=None,
         uks=None,
+        # xtb=None
         # xc=None,
         # basis_set_file=None,
         # basis_set=None,
@@ -141,7 +144,7 @@ class CP2Kinput(CP2K):
         # pseudo_potential=None,
         poisson_solver=None,
         cutoff=None,
-        max_scf=None,
+        # max_scf=None,
 
         # Parameters that are explicitly defined here. Can be overwritten by class arguments.
         # To use the input template or CP2K default values (if exist), use "None" class argument.
@@ -152,6 +155,7 @@ class CP2Kinput(CP2K):
         # charge=0,
         # multiplicity=1,
         # uks=False,
+        xtb='GFN2',
         xc='pbe',
         basis_set_file='BASIS_MOLOPT',
         basis_set='DZVP-MOLOPT-SR-GTH',
@@ -159,7 +163,7 @@ class CP2Kinput(CP2K):
         pseudo_potential='auto',
         # poisson_solver='auto',
         # cutoff=400 * Rydberg,
-        # max_scf=1000,
+        max_scf=1000,
 
         # The input template.
         inp="",
@@ -173,28 +177,52 @@ class CP2Kinput(CP2K):
         """Generates a CP2K input file"""
         p = self.parameters
         root = parse_input(p.inp)
+
+        if p.xtb:
+            p.xc=None
+            p.basis_set_file=None
+            p.basis_set=None
+            p.potential_file=None
+            p.pseudo_potential=None
+
+        root.add_keyword('GLOBAL', 'RUN_TYPE NEGF')
+
         if p.project:
             root.add_keyword('GLOBAL', 'PROJECT ' + p.project)
+
         if p.print_level:
             root.add_keyword('GLOBAL', 'PRINT_LEVEL ' + p.print_level)
+
         if p.force_eval_method:
             root.add_keyword('FORCE_EVAL', 'METHOD ' + p.force_eval_method)
+
         if p.stress_tensor:
             root.add_keyword('FORCE_EVAL', 'STRESS_TENSOR ANALYTICAL')
             root.add_keyword('FORCE_EVAL/PRINT/STRESS_TENSOR',
                              '_SECTION_PARAMETERS_ ON')
+
         if p.basis_set_file:
             root.add_keyword('FORCE_EVAL/DFT',
                              'BASIS_SET_FILE_NAME ' + p.basis_set_file)
+
         if p.potential_file:
             root.add_keyword('FORCE_EVAL/DFT',
                              'POTENTIAL_FILE_NAME ' + p.potential_file)
+
         if p.cutoff:
             root.add_keyword('FORCE_EVAL/DFT/MGRID',
                              'CUTOFF [eV] %.18e' % p.cutoff)
+
         if p.max_scf:
             root.add_keyword('FORCE_EVAL/DFT/SCF', 'MAX_SCF %d' % p.max_scf)
             root.add_keyword('FORCE_EVAL/DFT/LS_SCF', 'MAX_SCF %d' % p.max_scf)
+
+        if p.xtb:
+            root.add_keyword('FORCE_EVAL/DFT/QS', 'METHOD xTB')
+            #root.add_keyword('FORCE_EVAL/DFT/QS/XTB', 'CHECK_ATOMIC_CHARGES F')
+            if p.xtb == 'GFN2':
+                root.add_keyword('FORCE_EVAL/DFT/QS/XTB', 'GFN_TYPE TBLITE')
+                root.add_keyword('FORCE_EVAL/DFT/QS/XTB/TBLITE', 'METHOD GFN2')
 
         if p.xc:
             legacy_libxc = ""
